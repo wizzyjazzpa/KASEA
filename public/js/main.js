@@ -29,12 +29,15 @@ Author: GrayGrids
         var logo = document.querySelector('.navbar-brand img')
         if (window.pageYOffset > sticky) {
           header_navbar.classList.add("sticky");
-          logo.src = 'images/KASEA LOGO (W)_060326.svg';
+          logo.src = 'images/dfg.png';
           logotext = document.getElementById('logotext');
+            logo.style.width="10%"
           
         } else {
           header_navbar.classList.remove("sticky");
-          logo.src = 'images/KASEA LOGO (W)_060326.svg';
+          logo.src = 'images/dfg.png';
+          logo.style.width="10%"
+          logo.style.margin="2%";
         }
 
         // show or hide the back-top-top button
