@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token Presale Platform</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap-grid.min.css" integrity="sha512-dOjUSaLkr6G2pwQ7ry9juX+iXw5602zg1kg8yH+guR3uSEidGyCnOEQnGlr7xwu/8WE+pVm1ZNqaIs5ETTIJQg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
@@ -40,15 +43,7 @@
                         <img src="images/KASEA_060323.svg" style="width: 20%;">
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button id="connectWalletBtn" class="px-4 py-2 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition">
-                        Connect Wallet
-                    </button>
-                    <div id="walletInfo" class="hidden items-center space-x-2 bg-gray-700 px-3 py-1 rounded-full">
-                        <i data-feather="user" class="w-4 h-4"></i>
-                        <span id="walletAddress" class="text-sm"></span>
-                    </div>
-                </div>
+               
             </div>
         </div>
     </nav>
@@ -59,8 +54,17 @@
             <h1 class="text-4xl md:text-5xl font-bold mb-4">Join Our Token Presale</h1>
             <p class="text-xl text-gray-300 max-w-3xl mx-auto">Secure your tokens at the best price before we hit the exchanges</p>
         </div>
-
+             <div class="flex items-center space-x-4"  style=" margin-bottom: 2%;">
+                    <button id="connectBtn" class="px-4 py-2 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition" style="margin-left: 35%;">
+                        Connect Wallet
+                    </button>
+                    <div id="walletInfo" class="hidden items-center space-x-2 bg-gray-700 px-3 py-1 rounded-full">
+                        <i data-feather="user" class="w-4 h-4"></i>
+                        <span id="walletAddress" class="text-sm"></span>
+                    </div>
+                </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
             <!-- Left Column - Presale Info -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Presale Phases -->
@@ -183,7 +187,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
-                    <span class="text-xl font-bold bg-clip-text text-transparent gradient-bg">TokenPresale</span>
+                    <span class="text-xl font-bold bg-clip-text text-transparent gradient-bg">KASEA</span>
                 </div>
                 <div class="flex space-x-6">
                     <a href="#" class="text-gray-400 hover:text-white transition">
@@ -201,7 +205,7 @@
                 </div>
             </div>
             <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
-                <p>© 2023 TokenPresale. All rights reserved.</p>
+                <p>© 2025 KASEA. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -288,5 +292,41 @@
             document.getElementById('tokenPrice').textContent = priceText;
         }
     </script>
+
+    <script>
+    $(document).ready(function () {
+       $("#connectBtn").click(async function () {
+        try {
+          // --- Phantom Wallet (Solana) ---
+          if (window.solana && window.solana.isPhantom) {
+            const resp = await window.solana.connect();
+            $("#walletAddress").text("Connected Phantom: " + resp.publicKey.toString());
+            return;
+          }
+
+          // --- Ethereum wallets (MetaMask, Trust, Coinbase, etc.) ---
+          if (window.ethereum) {
+            const accounts = await window.ethereum.request({
+              method: "eth_requestAccounts",
+            });
+            $("#walletAddress").text("Connected Ethereum Wallet: " + accounts[0]);
+            return;
+          }
+
+          // --- Trust Wallet mobile deep link ---
+          // On mobile, if Trust Wallet app is installed, you can open it via deep link
+          if (/Mobi|Android/i.test(navigator.userAgent)) {
+            window.location.href = "trust://browser_enable"; 
+            return;
+          }
+
+          alert("No supported wallet found. Please install MetaMask, Trust Wallet, or Phantom.");
+        } catch (err) {
+          console.error(err);
+          alert("Wallet connection failed: " + err.message);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
