@@ -23,5 +23,5 @@ exports.token = async(req,res)=>{
        const locals ={
            title:"Token"
      }
-     res.render('pages/token',{locals});
+     res.render('pages/tokenpresale',{locals});
 }

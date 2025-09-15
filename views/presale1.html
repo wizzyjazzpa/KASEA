@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><% locals.title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
+        }
+        .token-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .payment-method {
+            transition: all 0.3s ease;
+        }
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            width: 65%;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg text-white">
+    <div id="vanta-bg" class="fixed inset-0 z-0"></div>
+    
+    <div class="relative z-10">
+        <!-- Navigation -->
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-feather="zap" class="text-yellow-300"></i>
+                <span class="text-xl font-bold">TokenPresale</span>
+            </div>
+            <button id="connect-wallet" class="px-6 py-2 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition flex items-center space-x-2">
+                <i data-feather="user" class="w-4 h-4"></i>
+                <span>Connect Wallet</span>
+            </button>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="container mx-auto px-6 py-16 text-center" data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Join Our Token Presale</h1>
+            <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto mb-10">
+                Be part of the future with our revolutionary token. Limited supply available at discounted rates.
+            </p>
+            
+            <div class="max-w-2xl mx-auto bg-white bg-opacity-10 rounded-xl p-8 backdrop-blur-sm border border-white border-opacity-20">
+                <div class="flex justify-between mb-4">
+                    <span>Presale Progress</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-bar mb-6">
+                    <div class="progress-fill"></div>
+                </div>
+                
+                <div class="grid grid-cols-4 gap-4 mb-8">
+                    <div>
+                        <div class="text-2xl font-bold">Phase 3</div>
+                        <div class="text-sm opacity-80">Current Phase</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold">500K</div>
+                        <div class="text-sm opacity-80">Total Supply</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold">325K</div>
+                        <div class="text-sm opacity-80">Sold</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold">$0.10</div>
+                        <div class="text-sm opacity-80">Price per token</div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="token-amount" class="block text-left mb-2">Amount to purchase</label>
+                    <div class="relative">
+                        <input type="number" id="token-amount" class="w-full bg-white bg-opacity-20 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-300" placeholder="1000">
+                        <div class="absolute right-3 top-3 text-sm opacity-70">≈ $100</div>
+                    </div>
+                </div>
+                
+                <button id="buy-tokens" class="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition flex items-center justify-center space-x-2">
+                    <i data-feather="shopping-bag" class="w-5 h-5"></i>
+                    <span>Buy Tokens</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Presale Phases -->
+        <section class="container mx-auto px-6 py-16" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-12 text-center">Presale Phases</h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="relative">
+                    <!-- Timeline line -->
+                    <div class="absolute left-4 h-full w-0.5 bg-white bg-opacity-20 top-0"></div>
+                    
+                    <!-- Phase 1 -->
+                    <div class="relative mb-10 pl-12">
+                        <div class="absolute left-0 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center">
+                            <span class="font-bold">1</span>
+                        </div>
+                        <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20">
+                            <h3 class="text-xl font-semibold mb-2">Seed Round</h3>
+                            <div class="flex flex-wrap justify-between mb-4">
+                                <div>
+                                    <span class="opacity-80">Price:</span>
+                                    <span class="font-medium ml-2">$0.05</span>
+                                </div>
+                                <div>
+                                    <span class="opacity-80">Allocation:</span>
+                                    <span class="font-medium ml-2">100K FTR</span>
+                                </div>
+                                <div>
+                                    <span class="opacity-80">Status:</span>
+                                    <span class="font-medium ml-2 text-green-400">Completed</span>
+                                </div>
+                            </div>
+                            <p class="opacity-90">Exclusive round for early supporters and strategic partners.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phase 2 -->
+                    <div class="relative mb-10 pl-12">
+                        <div class="absolute left-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                            <span class="font-bold">2</span>
+                        </div>
+                        <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20">
+                            <h3 class="text-xl font-semibold mb-2">Private Sale</h3>
+                            <div class="flex flex-wrap justify-between mb-4">
+                                <div>
+                                    <span class="opacity-80">Price:</span>
+                                    <span class="font-medium ml-2">$0.08</span>
+                                </div>
+                                <div>
+                                    <span class="opacity-80">Allocation:</span>
+                                    <span class="font-medium ml-2">200K FTR</span>
+                                </div>
+                                <div>
+                                    <span class="opacity-80">Status:</span>
+                                    <span class="font-medium ml-2 text-green-400">Completed</span>
+                                </div>
+                            </div>
+                            <p class="opacity-90">Open to whitelisted participants with higher allocation limits.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Phase -->
+                    <div class="relative mb-10 pl-12">
+                        <div class="absolute left-0 w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center">
+                            <span class="font-bold">3</span>
+                        </div>
+                        <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20 ring-2 ring-yellow-400">
+                            <h3 class="text-xl font-semibold mb-2">Public Presale</h3>
+                            <div class="flex flex-wrap justify-between mb-4">
+                                <div>
+                                    <span class="opacity-80">Price:</span>
+                                    <span class="font-medium ml-2">$0.10</span>
+                                </div>
+                                <div>
+                                    <span class="opacity-80">Allocation:</span>
+                                    <span class="font-medium ml-2">200K FTR</span>
+                                </div>
+                                <div>
+                                    <span class="opacity-80">Status:</span>
+                                    <span class="font-medium ml-2 text-yellow-400">Active</span>
+                                </div>
+                            </div>
+                            <p class="opacity-90">Open to all participants with no whitelist requirements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Methods -->
+        <section class="container mx-auto px-6 py-16" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-12 text-center">Accepted Payment Methods</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="payment-method bg-white bg-opacity-10 rounded-xl p-6 text-center border border-white border-opacity-20">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="dollar-sign" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Ethereum (ETH)</h3>
+                    <p class="opacity-80 mb-4">Pay with ETH from any Ethereum wallet</p>
+                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition">Select ETH</button>
+                </div>
+                
+                <div class="payment-method bg-white bg-opacity-10 rounded-xl p-6 text-center border border-white border-opacity-20">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="bitcoin" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Bitcoin (BTC)</h3>
+                    <p class="opacity-80 mb-4">Pay with BTC via our secure gateway</p>
+                    <button class="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg text-sm transition">Select BTC</button>
+                </div>
+                
+                <div class="payment-method bg-white bg-opacity-10 rounded-xl p-6 text-center border border-white border-opacity-20">
+                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="cpu" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Solana (SOL)</h3>
+                    <p class="opacity-80 mb-4">Pay with SOL from any Solana wallet</p>
+                    <button class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm transition">Select SOL</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Details -->
+        <section class="container mx-auto px-6 py-16" data-aos="fade-up">
+            <div class="max-w-4xl mx-auto bg-white bg-opacity-10 rounded-xl p-8 backdrop-blur-sm border border-white border-opacity-20">
+                <h2 class="text-3xl font-bold mb-6">Token Details</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Token Information</h3>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Token Name:</span>
+                                <span class="font-medium">FutureToken</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Token Symbol:</span>
+                                <span class="font-medium">FTR</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Total Supply:</span>
+                                <span class="font-medium">1,000,000 FTR</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Presale Allocation:</span>
+                                <span class="font-medium">500,000 FTR</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Presale Details</h3>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Start Date:</span>
+                                <span class="font-medium">June 1, 2023</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="opacity-80">End Date:</span>
+                                <span class="font-medium">July 31, 2023</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Presale Price:</span>
+                                <span class="font-medium">$0.10 per FTR</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="opacity-80">Listing Price:</span>
+                                <span class="font-medium">$0.15 per FTR</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="container mx-auto px-6 py-16" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+            
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20">
+                    <button class="flex justify-between items-center w-full text-left">
+                        <h3 class="text-lg font-medium">How do I participate in the presale?</h3>
+                        <i data-feather="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                    </button>
+                    <div class="mt-4 hidden">
+                        <p class="opacity-90">Connect your wallet using the button at the top right, select your preferred payment method (ETH, BTC, or SOL), enter the amount of tokens you wish to purchase, and confirm the transaction.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20">
+                    <button class="flex justify-between items-center w-full text-left">
+                        <h3 class="text-lg font-medium">When will I receive my tokens?</h3>
+                        <i data-feather="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                    </button>
+                    <div class="mt-4 hidden">
+                        <p class="opacity-90">Tokens will be distributed immediately after the presale concludes and the token generation event occurs. You will be able to claim your tokens through this platform.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20">
+                    <button class="flex justify-between items-center w-full text-left">
+                        <h3 class="text-lg font-medium">What wallets are supported?</h3>
+                        <i data-feather="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                    </button>
+                    <div class="mt-4 hidden">
+                        <p class="opacity-90">We support MetaMask, WalletConnect, Coinbase Wallet, Phantom, and other major wallet providers for Ethereum and Solana networks.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 border border-white border-opacity-20">
+                    <button class="flex justify-between items-center w-full text-left">
+                        <h3 class="text-lg font-medium">Is there a minimum purchase amount?</h3>
+                        <i data-feather="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                    </button>
+                    <div class="mt-4 hidden">
+                        <p class="opacity-90">Yes, the minimum purchase is 100 FTR tokens ($10 equivalent). There is no maximum purchase limit during the presale.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="container mx-auto px-6 py-12 border-t border-white border-opacity-20">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <i data-feather="zap" class="text-yellow-300"></i>
+                    <span class="text-xl font-bold">TokenPresale</span>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="opacity-80 hover:opacity-100 transition"><i data-feather="twitter"></i></a>
+                    <a href="#" class="opacity-80 hover:opacity-100 transition"><i data-feather="telegram"></i></a>
+                    <a href="#" class="opacity-80 hover:opacity-100 transition"><i data-feather="discord"></i></a>
+                    <a href="#" class="opacity-80 hover:opacity-100 transition"><i data-feather="github"></i></a>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center opacity-70 text-sm">
+                <p>© 2023 TokenPresale. All rights reserved.</p>
+                <p class="mt-2">This is not financial advice. Please do your own research before participating.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+    <script>
+        // Initialize Vanta.js background
+        VANTA.GLOBE({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x6e8efb,
+            backgroundColor: 0x0,
+            size: 0.8
+        });
+
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Initialize Feather Icons
+        feather.replace();
+
+        // FAQ accordion functionality
+        document.querySelectorAll('#faq button').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Wallet connection simulation
+        document.getElementById('connect-wallet').addEventListener('click', () => {
+            alert('Wallet connection would be implemented here with Web3.js or similar library');
+        });
+
+        // Buy tokens button
+        document.getElementById('buy-tokens').addEventListener('click', () => {
+            const amount = document.getElementById('token-amount').value;
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid token amount');
+                return;
+            }
+            alert(`Purchase of ${amount} tokens would be processed here`);
+        });
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active state from all buttons
+                document.querySelectorAll('.payment-method button').forEach(btn => {
+                    btn.classList.remove('ring-2', 'ring-white');
+                });
+                
+                // Add active state to clicked button
+                button.classList.add('ring-2', 'ring-white');
+                
+                // In a real implementation, this would set the selected payment method
+                const method = button.textContent.trim().replace('Select ', '');
+                console.log(`Selected payment method: ${method}`);
+            });
+        });
+
+        // Token amount calculation
+        document.getElementById('token-amount').addEventListener('input', (e) => {
+            const amount = e.target.value;
+            const price = 0.10; // $0.10 per token
+            const usdValue = amount * price;
+            
+            // Update the USD value display
+            const usdDisplay = e.target.nextElementSibling;
+            if (amount && !isNaN(amount) && amount > 0) {
+                usdDisplay.textContent = `≈ $${usdValue.toFixed(2)}`;
+            } else {
+                usdDisplay.textContent = '≈ $0';
+            }
+        });
+    </script>
+</body>
+</html>
