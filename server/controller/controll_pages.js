@@ -25,3 +25,9 @@ exports.token = async(req,res)=>{
      }
      res.render('pages/tokenpresale',{locals});
 }
+exports.walletconnect = async(req,res)=>{
+       const locals ={
+           title:"Kasea Token"
+     }
+     res.render('pages/wallectconnectv2',{locals});
+}
