@@ -1,68 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>WalletConnect with Web3Modal</title>
-
-  <!-- Web3.js -->
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-
-  <!-- WalletConnect Provider -->
-  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-
-  <!-- Web3Modal -->
-  <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.js"></script>
+  <meta charset="UTF-8" />
+  <title>EJS + Vue + Phantom Example</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 <body>
-  <h2>WalletConnect Demo</h2>
+  <div id="app">
+    <h2>{{ title }}</h2>
 
-  <button id="connectBtn">Connect Wallet</button>
-  <p id="walletAddress">No wallet connected</p>
+    <p v-if="!connected">
+      No wallet connected
+    </p>
+
+    <p v-else>
+      ✅ Connected: {{ address }}
+    </p>
+
+    <button @click="connectWallet" :disabled="connecting">
+      {{ connecting ? "Connecting..." : "Connect Phantom" }}
+    </button>
+  </div>
 
   <script>
-    // Provider options
-    const providerOptions = {
-      walletconnect: {
-        package: window.WalletConnectProvider, // 👈 no `.default`
-        options: {
-          rpc: {
-            1: "https://rpc.ankr.com/eth",   // Ethereum Mainnet (public RPC)
-            137: "https://rpc.ankr.com/polygon" // Polygon Mainnet
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          title: "Vue + EJS + Phantom Demo",
+          connected: false,
+          address: "",
+          connecting: false
+        };
+      },
+      methods: {
+        async connectWallet() {
+          try {
+            if (!window.solana || !window.solana.isPhantom) {
+              alert("Phantom wallet not found. Please install Phantom.");
+              return;
+            }
+
+            this.connecting = true;
+
+            const resp = await window.solana.connect();
+            this.address = resp.publicKey.toString();
+            this.connected = true;
+            this.connecting = false;
+
+            // Send wallet info to Node server
+            fetch("/save-wallet", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                wallet: this.address,
+                walletName: "Phantom",
+                chain: "Solana"
+              })
+            });
+          } catch (err) {
+            console.error("Connection failed:", err);
+            this.connecting = false;
           }
-          // Or: infuraId: "YOUR_INFURA_ID"
+        }
+      },
+      mounted() {
+        // Auto-check if already connected
+        if (window.solana && window.solana.isPhantom) {
+          window.solana.connect({ onlyIfTrusted: true })
+            .then(resp => {
+              this.address = resp.publicKey.toString();
+              this.connected = true;
+            })
+            .catch(() => {
+              console.log("No Phantom session yet");
+            });
+
+          // Listen for account change
+          window.solana.on("accountChanged", (pubKey) => {
+            if (pubKey) {
+              this.address = pubKey.toString();
+              this.connected = true;
+            } else {
+              this.connected = false;
+              this.address = "";
+            }
+          });
         }
       }
-    };
-
-    // Create Web3Modal
-    const web3Modal = new window.Web3Modal.default({
-      cacheProvider: false,
-      providerOptions
-    });
-
-    let web3;
-
-    async function connectWallet() {
-      try {
-        const provider = await web3Modal.connect();
-        web3 = new Web3(provider);
-
-        const accounts = await web3.eth.getAccounts();
-        document.getElementById("walletAddress").innerText = "Connected: " + accounts[0];
-
-        // Send to server
-        fetch("/save-wallet", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ address: accounts[0], wallet: "walletconnect" })
-        });
-
-      } catch (err) {
-        console.error("Connection failed:", err);
-      }
-    }
-
-    document.getElementById("connectBtn").addEventListener("click", connectWallet);
+    }).mount("#app");
   </script>
 </body>
 </html>
