@@ -15,6 +15,7 @@ app.use(express.static('public'));
 app.set('view engine','ejs');
 
 app.use('/',require('./server/routes/route_pages'));
+app.use('/api',require('./server/routes/api_routes'));
 
 
 app.listen(port,()=>{

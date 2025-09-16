@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Token Presale Platform</title>
+    <title><%= locals.title %></title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap-grid.min.css" integrity="sha512-dOjUSaLkr6G2pwQ7ry9juX+iXw5602zg1kg8yH+guR3uSEidGyCnOEQnGlr7xwu/8WE+pVm1ZNqaIs5ETTIJQg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -54,10 +54,12 @@
             <h1 class="text-4xl md:text-5xl font-bold mb-4">Join Our Token Presale</h1>
             <p class="text-xl text-gray-300 max-w-3xl mx-auto">Secure your tokens at the best price before we hit the exchanges</p>
         </div>
+            
              <div class="flex items-center space-x-4"  style=" margin-bottom: 2%;">
                     <button id="connectBtn" class="px-4 py-2 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition" style="margin-left: 35%;">
                         Connect Wallet
                     </button>
+                       
                     <div id="walletInfo" class="hidden items-center space-x-2 bg-gray-700 px-3 py-1 rounded-full">
                         <i data-feather="user" class="w-4 h-4"></i>
                         <span id="walletAddress" class="text-sm"></span>
@@ -293,39 +295,107 @@
         }
     </script>
 
-    <script>
-    $(document).ready(function () {
-       $("#connectBtn").click(async function () {
-        try {
-          // --- Phantom Wallet (Solana) ---
-          if (window.solana && window.solana.isPhantom) {
-            const resp = await window.solana.connect();
-            $("#walletAddress").text("Connected Phantom: " + resp.publicKey.toString());
-            return;
-          }
+  <script>
+       let walletAddress = null;
+        let walletName = null;
+         async function checkWalletConnection() {
+      try {
+       
 
-          // --- Ethereum wallets (MetaMask, Trust, Coinbase, etc.) ---
-          if (window.ethereum) {
-            const accounts = await window.ethereum.request({
-              method: "eth_requestAccounts",
-            });
-            $("#walletAddress").text("Connected Ethereum Wallet: " + accounts[0]);
-            return;
+        // --- Phantom Wallet (Solana) ---
+        if (window.solana && window.solana.isPhantom) {
+          if (window.solana.isConnected) {
+            walletAddress = window.solana.publicKey.toString();
+            walletName = "Phantom";
           }
-
-          // --- Trust Wallet mobile deep link ---
-          // On mobile, if Trust Wallet app is installed, you can open it via deep link
-          if (/Mobi|Android/i.test(navigator.userAgent)) {
-            window.location.href = "trust://browser_enable"; 
-            return;
-          }
-
-          alert("No supported wallet found. Please install MetaMask, Trust Wallet, or Phantom.");
-        } catch (err) {
-          console.error(err);
-          alert("Wallet connection failed: " + err.message);
         }
-      });
+
+        // --- Ethereum wallets (MetaMask, Trust, etc.) ---
+        else if (window.ethereum) {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          if (accounts.length > 0) {
+            walletAddress = accounts[0];
+            walletName = "ethereum";
+          }
+        }
+
+        // Update UI
+        if (walletAddress) {
+          $("#walletAddress").text("Connected: " + walletAddress); 
+          // $('#walletAddress').tex(walletAddress) ;
+           $('#walletInfo').removeClass('hidden');
+           $('#connectBtn').addClass('hidden');
+            $('#buyTokensBtn').prop('disabled', false);
+              // send to backend 
+          $.ajax({
+              url: "/api/savewallet",
+              method: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ address: walletAddress, type: walletName }),
+              success: function (res) {
+                console.log("Saved to server:", res);
+              },
+              error: function (err) {
+                console.error("Server error:", err);
+              }
+            });
+
+        } else {
+          $("#walletAddress").text("No wallet connected");
+        }
+      } catch (err) {
+        console.error("Error checking wallet:", err);
+      }
+    }
+
+    async function connectWallet() {
+      try {
+        // --- Phantom ---
+        if (window.solana && window.solana.isPhantom) {
+          const resp = await window.solana.connect();
+          $("#walletAddress").text("Connected Phantom: " + resp.publicKey.toString());
+          // send to backend 
+          
+          return;
+        }
+
+        // --- Ethereum wallets ---
+        if (window.ethereum) {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          $("#walletAddress").text("Connected Ethereum Wallet: " + accounts[0]);
+         
+          return;
+        }
+
+        alert("No supported wallet found. Please install MetaMask, Trust Wallet, or Phantom.");
+      } catch (err) {
+        console.error(err);
+        alert("Wallet connection failed: " + err.message);
+      }
+    }
+
+    $(document).ready(function () {
+      // Connect button click
+      $("#connectBtn").click(connectWallet);
+
+      // Check on load
+      checkWalletConnection();
+
+      // Listen for account changes (Ethereum)
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", checkWalletConnection);
+        window.ethereum.on("chainChanged", checkWalletConnection);
+      }
+
+      // Listen for Phantom connect/disconnect
+      if (window.solana && window.solana.isPhantom) {
+        window.solana.on("connect", checkWalletConnection);
+        window.solana.on("disconnect", checkWalletConnection);
+        window.solana.on("accountChanged", checkWalletConnection);
+      }
+
+      // Poll every 5 seconds just in case
+      setInterval(checkWalletConnection, 5000);
     });
   </script>
 </body>

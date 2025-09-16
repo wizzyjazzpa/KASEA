@@ -21,7 +21,7 @@ exports.howtobuy = async(req,res)=>{
 }
 exports.token = async(req,res)=>{
        const locals ={
-           title:"Token"
+           title:"Kasea Token"
      }
      res.render('pages/tokenpresale',{locals});
 }
