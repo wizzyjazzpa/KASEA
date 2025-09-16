@@ -2,23 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>EJS + Vue + Phantom Example</title>
+  <title>Wallet Connect Demo</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
 </head>
 <body>
   <div id="app">
     <h2>{{ title }}</h2>
 
-    <p v-if="!connected">
-      No wallet connected
-    </p>
-
-    <p v-else>
-      ✅ Connected: {{ address }}
-    </p>
+    <p v-if="!connected">⚠ No wallet connected</p>
+    <p v-else>✅ Connected: {{ address }} ({{ walletName }} on {{ chain }})</p>
 
     <button @click="connectWallet" :disabled="connecting">
-      {{ connecting ? "Connecting..." : "Connect Phantom" }}
+      {{ connecting ? "Connecting..." : "Connect Wallet" }}
     </button>
   </div>
 
@@ -28,65 +25,128 @@
     createApp({
       data() {
         return {
-          title: "Vue + EJS + Phantom Demo",
+          title: "Vue + EJS Wallet Demo",
           connected: false,
           address: "",
-          connecting: false
+          walletName: "",
+          chain: "",
+          connecting: false,
+          web3: null,
+          provider: null
         };
       },
       methods: {
         async connectWallet() {
+          this.connecting = true;
           try {
-            if (!window.solana || !window.solana.isPhantom) {
-              alert("Phantom wallet not found. Please install Phantom.");
+            // --- Phantom (Solana) ---
+            if (window.solana && window.solana.isPhantom) {
+              const resp = await window.solana.connect();
+              this.address = resp.publicKey.toString();
+              this.walletName = "Phantom";
+              this.chain = "Solana";
+              this.connected = true;
+              this.sendToServer();
+              this.connecting = false;
               return;
             }
 
-            this.connecting = true;
+            // --- Ethereum wallets (MetaMask, TrustWallet in dApp browsers) ---
+            if (window.ethereum) {
+              this.provider = window.ethereum;
+              this.web3 = new Web3(this.provider);
+              const accounts = await this.provider.request({ method: "eth_requestAccounts" });
+              this.address = accounts[0];
+              this.walletName = this.detectEthereumWallet();
+              this.chain = "Ethereum";
+              this.connected = true;
+              this.sendToServer();
+              this.connecting = false;
 
-            const resp = await window.solana.connect();
-            this.address = resp.publicKey.toString();
+              this.provider.on("accountsChanged", (accs) => {
+                this.address = accs.length > 0 ? accs[0] : "";
+                this.connected = accs.length > 0;
+              });
+
+              return;
+            }
+
+            // --- WalletConnect fallback (for mobile Safari/Chrome) ---
+            const WalletConnectProvider = window.WalletConnectProvider.default;
+            this.provider = new WalletConnectProvider({
+              rpc: {
+                1: "https://rpc.ankr.com/eth" // Ethereum mainnet RPC
+              }
+            });
+
+            await this.provider.enable();
+            this.web3 = new Web3(this.provider);
+
+            const accounts = await this.web3.eth.getAccounts();
+            this.address = accounts[0];
+            this.walletName = "WalletConnect (TrustWallet/MetaMask)";
+            this.chain = "Ethereum";
             this.connected = true;
-            this.connecting = false;
+            this.sendToServer();
 
-            // Send wallet info to Node server
-            fetch("/save-wallet", {
+            this.provider.on("accountsChanged", (accs) => {
+              this.address = accs.length > 0 ? accs[0] : "";
+              this.connected = accs.length > 0;
+            });
+
+          } catch (err) {
+            console.error("Wallet connection failed:", err);
+          } finally {
+            this.connecting = false;
+          }
+        },
+
+        detectEthereumWallet() {
+          if (window.ethereum?.isMetaMask) return "MetaMask";
+          if (window.ethereum?.isTrust) return "TrustWallet";
+          return "Ethereum Wallet";
+        },
+
+        async sendToServer() {
+          try {
+            await fetch("/save-wallet", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 wallet: this.address,
-                walletName: "Phantom",
-                chain: "Solana"
+                walletName: this.walletName,
+                chain: this.chain
               })
             });
           } catch (err) {
-            console.error("Connection failed:", err);
-            this.connecting = false;
+            console.error("Failed to send wallet info to server:", err);
           }
         }
       },
       mounted() {
-        // Auto-check if already connected
+        // Auto-check Phantom
         if (window.solana && window.solana.isPhantom) {
           window.solana.connect({ onlyIfTrusted: true })
             .then(resp => {
               this.address = resp.publicKey.toString();
+              this.walletName = "Phantom";
+              this.chain = "Solana";
               this.connected = true;
             })
-            .catch(() => {
-              console.log("No Phantom session yet");
-            });
+            .catch(() => {});
+        }
 
-          // Listen for account change
-          window.solana.on("accountChanged", (pubKey) => {
-            if (pubKey) {
-              this.address = pubKey.toString();
-              this.connected = true;
-            } else {
-              this.connected = false;
-              this.address = "";
-            }
-          });
+        // Auto-check Ethereum
+        if (window.ethereum) {
+          window.ethereum.request({ method: "eth_accounts" })
+            .then((accounts) => {
+              if (accounts.length > 0) {
+                this.address = accounts[0];
+                this.walletName = this.detectEthereumWallet();
+                this.chain = "Ethereum";
+                this.connected = true;
+              }
+            });
         }
       }
     }).mount("#app");
