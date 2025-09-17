@@ -14,6 +14,7 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
@@ -35,6 +36,7 @@
 </head>
 <body class="min-h-screen bg-gray-900 text-white">
     <!-- Navigation -->
+     <script type="module" src="http://localhost:5173/src/main.js"></script>
     <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-md fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -295,43 +297,6 @@
         }
     </script>
 
-  <script>
-      async function connectWallet() {
-  try {
-    // --- Phantom ---
-    if (window.solana && window.solana.isPhantom) {
-      const resp = await window.solana.connect();
-      const walletAddress = resp.publicKey.toString();
-      $("#walletAddress").text("Connected Phantom: " + walletAddress);
-      sendWallet(walletAddress, "phantom");
-      return;
-    }
-
-    // --- Ethereum wallets ---
-    if (window.ethereum) {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const walletAddress = accounts[0];
-      $("#walletAddress").text("Connected Ethereum Wallet: " + walletAddress);
-      sendWallet(walletAddress, "ethereum");
-      return;
-    }
-
-    // --- Mobile deep links ---
-    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-      // MetaMask mobile
-      window.location.href = "https://metamask.app.link/https://kaseacoin.up.railway.app/token";
-      // Or Trust Wallet
-      // window.location.href = "trust://browser_enable?url=YOUR_DOMAIN_HERE";
-      return;
-    }
-
-    alert("No supported wallet found. Please install MetaMask, Trust Wallet, or Phantom.");
-  } catch (err) {
-    console.error(err);
-    alert("Wallet connection failed: " + err.message);
-  }
-}
-
-  </script>
+  
 </body>
 </html>

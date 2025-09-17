@@ -14,7 +14,10 @@ app.use(express.json());
 
 app.use(express.static('public'));
 app.set('view engine','ejs');
+app.set("views", path.join(__dirname, "views"));
 
+// Serve Vite bundle
+app.use("/dist", express.static(path.join(__dirname, "dist")));
 app.use('/',require('./server/routes/route_pages'));
 app.use('/api',require('./server/routes/api_routes'));
 

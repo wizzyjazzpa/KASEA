@@ -1,43 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Thirdweb + EJS</title>
-  <!-- Thirdweb browser SDK -->
-  <script src="https://unpkg.com/thirdweb@latest/dist/browser/thirdweb.production.min.js"></script>
+  <title>WalletConnect Standalone</title>
+  <!-- Web3Modal Standalone UMD -->
+  <script src="https://unpkg.com/@web3modal/standalone@2.7.0/dist/index.umd.js"></script>
+  <script src="https://unpkg.com/ethers@6.10.0/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-  <h1>Thirdweb + EJS Wallet Connect</h1>
-
+  <h1>Connect Wallet (Mobile + Desktop)</h1>
   <button id="connect">Connect Wallet</button>
   <p id="status">Not connected</p>
 
   <script>
-    async function connectWallet() {
+    const projectId = "c8d7dcaec6bd94bddb76b57445502b27"; 
+    // 👉 create free projectId at https://cloud.walletconnect.com
+// ✅ Correct constructor (notice Web3Modal, not WalletConnectModal)
+    const modal = new window.Web3Modal({
+      projectId,
+      themeMode: "light"
+    });
+
+    let provider;
+
+    document.getElementById("connect").addEventListener("click", async () => {
       try {
-        const client = new thirdweb.createThirdwebClient({
-          clientId: "YOUR_CLIENT_ID" // optional
+        // Open QR modal (desktop) or deep link (mobile)
+        const session = await modal.openModal({
+          namespaces: {
+            eip155: {
+              methods: ["eth_sendTransaction", "personal_sign", "eth_signTypedData"],
+              chains: ["eip155:1"], // Ethereum mainnet
+              events: ["accountsChanged", "chainChanged"]
+            }
+          }
         });
 
-        const wallet = await thirdweb.connect({
-          client,
-          wallets: [
-            thirdweb.wallets.metamask(),
-            thirdweb.wallets.coinbaseWallet(),
-            thirdweb.wallets.walletConnect()
-          ]
-        });
+        console.log("Session:", session);
 
-        const address = wallet.getAccount().address;
+        // ⚡ Access WalletConnect provider
+        provider = new ethers.BrowserProvider(modal.getWalletConnectProvider());
+
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+
         document.getElementById("status").innerText = "Connected: " + address;
-
-        console.log("Wallet:", wallet);
       } catch (err) {
-        console.error(err);
+        console.error("Connection failed:", err);
         document.getElementById("status").innerText = "Connection failed";
       }
-    }
-
-    document.getElementById("connect").addEventListener("click", connectWallet);
+    });
   </script>
 </body>
 </html>

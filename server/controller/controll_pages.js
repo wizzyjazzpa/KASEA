@@ -3,7 +3,7 @@ exports.home = async(req,res)=>{
      const locals ={
            title:"Home"
      }
-     res.render('index',{locals});
+     res.render('home',{locals});
 }
 
 exports.staking = async(req,res)=>{
@@ -23,11 +23,17 @@ exports.token = async(req,res)=>{
        const locals ={
            title:"Kasea Token"
      }
-     res.render('pages/tokenpresale',{locals});
+     res.render('tokenpresale',{locals});
 }
 exports.walletconnect = async(req,res)=>{
        const locals ={
            title:"Kasea Token"
      }
      res.render('pages/wallect_connect',{locals});
+}
+exports.walletModal = async(req,res)=>{
+        const locals ={
+           title:"Kasea Token"
+     }
+     res.render('index',{locals});
 }
