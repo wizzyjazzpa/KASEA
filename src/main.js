@@ -10,6 +10,7 @@ const wc = walletConnectModule({
   projectId: "c8d7dcaec6bd94bddb76b57445502b27", // get from https://cloud.walletconnect.com
   version: 2,
   
+  
 });
 
 // Initialize Onboard
@@ -18,7 +19,13 @@ const onboard = Onboard({
   chains: [
     { id: 1, token: 'ETH', label: 'Ethereum Mainnet', rpcUrl: 'https://eth.llamarpc.com' },
     { id: 137, token: 'MATIC', label: 'Polygon', rpcUrl: 'https://polygon-rpc.com' }
-  ]
+  ],
+   appMetadata: {
+    name: 'My dApp',
+    icon: 'http://localhost:5000/images/KASEA LOGO (W)_060326.svg', // HTTPS required
+    description: 'Fully mobile-compatible dApp'
+    // No recommendedInjectedWallets: all wallets shown
+  }
 });
 
 const connectBtn = document.getElementById('connectBtn');
