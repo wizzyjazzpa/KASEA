@@ -17,12 +17,12 @@ const wc = walletConnectModule({
 const onboard = Onboard({
   wallets: [injected, wc],
   chains: [
-    { id: 1, token: 'ETH', label: 'Ethereum Mainnet', rpcUrl: 'https://eth.llamarpc.com' },
-    { id: 137, token: 'MATIC', label: 'Polygon', rpcUrl: 'https://polygon-rpc.com' }
+    { id: '0x1', token: 'ETH', label: 'Ethereum Mainnet', rpcUrl: 'https://eth.llamarpc.com' },
+    { id: '0x89', token: 'MATIC', label: 'Polygon', rpcUrl: 'https://polygon-rpc.com' }
   ],
    appMetadata: {
     name: 'My dApp',
-    icon: 'http://localhost:5000/images/KASEA LOGO (W)_060326.svg', // HTTPS required
+    icon: 'https://kaseacoin.up.railway.app/images/KASEA LOGO (W)_060326.svg', // HTTPS required
     description: 'Fully mobile-compatible dApp'
     // No recommendedInjectedWallets: all wallets shown
   }
