@@ -9,7 +9,7 @@ const injected = injectedModule();
 const wc = walletConnectModule({
   projectId: "c8d7dcaec6bd94bddb76b57445502b27", // get from https://cloud.walletconnect.com
   version: 2,
-  
+ 
   
 });
 
@@ -17,13 +17,14 @@ const wc = walletConnectModule({
 const onboard = Onboard({
   wallets: [injected, wc],
   chains: [
-    { id: '0x1', token: 'ETH', label: 'Ethereum Mainnet', rpcUrl: 'https://eth.llamarpc.com' },
+    { id: '0x1', token: 'ETH', label: 'Ethereum Mainnet', rpcUrl: 'https://mainnet.infura.io/v3/d45d6f0ff06e495089bba738442382a3' },
     { id: '0x89', token: 'MATIC', label: 'Polygon', rpcUrl: 'https://polygon-rpc.com' }
   ],
    appMetadata: {
     name: 'My dApp',
-    icon: 'https://kaseacoin.up.railway.app/images/KASEA LOGO (W)_060326.svg', // HTTPS required
-    description: 'Fully mobile-compatible dApp'
+    icon: 'https://kaseacoin.up.railway.app/assets/images/KASEA LOGO (W)_060326.svg', // HTTPS required
+    description: 'Fully mobile-compatible dApp',
+     
     // No recommendedInjectedWallets: all wallets shown
   }
 });
