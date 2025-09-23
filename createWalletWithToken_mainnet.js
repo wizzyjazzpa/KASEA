@@ -2,7 +2,6 @@
 const fs = require("fs");
 const web3 = require("@solana/web3.js");
 const splToken = require("@solana/spl-token");
-
 const { Connection, Keypair, clusterApiUrl } = web3;
 const { createMint, getOrCreateAssociatedTokenAccount, mintTo } = splToken;
 

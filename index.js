@@ -1,16 +1,22 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require('path');
+const connectDB = require('./server/config/db');
 
 
 const app = express();
 const port = process.env.PORT;
+//database connection
+
+connectDB();
 
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
+app.use(bodyParser.json());
 
 app.use(express.static('public'));
 app.set('view engine','ejs');

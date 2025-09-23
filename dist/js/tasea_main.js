@@ -1,0 +1,141 @@
+$(document).ready(function(){
+     const tokenRate=0.00234;
+     const tokenDecimals = 9;
+      localStorage.removeItem('Currency');
+     // Function to fetch Solana price
+  function fetchSolPrice() {
+    // Using CoinGecko API (free)
+    return $.getJSON('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
+      .then(data => data.solana.usd)
+      .catch(err => {
+        console.error('Error fetching Solana price:', err);
+        return null;
+      });
+  }
+  function fetchTronPrice() {
+  // Using CoinGecko API (free)
+  return $.getJSON('https://api.coingecko.com/api/v3/simple/price?ids=tron&vs_currencies=usd')
+    .then(data => data.tron.usd)
+    .catch(err => {
+      console.error('Error fetching Tron price:', err);
+      return null;
+    });
+}
+function fetchEthPrice() {
+  // Using CoinGecko API (free)
+  return $.getJSON('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+    .then(data => data.ethereum.usd)
+    .catch(err => {
+      console.error('Error fetching Ethereum price:', err);
+      return null;
+    });
+}
+    $('#cryptoAmount').on('keypress',  async function(){
+       let currency = localStorage.getItem("Currency");
+
+       switch(currency){
+          case "(ETH)":
+                    const ethAmount = parseFloat($(this).val());
+                     const MinimumEth = parseFloat(0.0142857);
+                    if (isNaN(ethAmount)) {
+                       console.log("enter a valid eth input")
+                        $('#buyTokensBtn').prop('disabled',true);
+                        return;
+                    }
+                    if(ethAmount<MinimumEth){
+                         $('#minimum_amount').html(`Minimum amount of (ETH) ${MinimumEth} `);
+                      $('#buyTokensBtn').prop('disabled',true);
+                    }else{
+                               $('#buyTokensBtn').prop('disabled',false);
+                             const ethPriceUsd = await fetchEthPrice();
+                             if(!ethPriceUsd){
+                                alert("Could not fetch SOL price");
+                             }else{
+                                    // Calculate number of tokens (without decimals)
+                                    const tokens = ethAmount * tokenRate;
+
+                                    // For raw token amount used in contract (with 9 decimals)
+                                    const tokensRaw = BigInt(Math.floor(tokens * (10 ** tokenDecimals)));
+                                    $('#priceamount_tx').html(tokensRaw.toLocaleString()+"(TST)");
+                             }
+                    }
+                  break;
+          case "(SOL)":
+             const solAmount = parseFloat($(this).val());
+              const MinimumAmount = parseFloat(0.0153);
+             if(isNaN(solAmount)){
+               console.log("enter a valid solana input")
+             }
+             if(solAmount<MinimumAmount){
+                $('#minimum_amount').html('Minimum amount of (SOL) 0.153');
+                $('#buyTokensBtn').prop('disabled',true);
+             }
+             else{
+                    const solPriceUsd = await fetchSolPrice();
+                    if(!solPriceUsd){
+                        alert("Could not fetch SOL price");
+                    }else{
+                              $('#buyTokensBtn').prop('disabled',false);
+                            const tokens = solAmount *tokenRate;
+                            // For raw token amount used in contract (with 9 decimals)
+                            const tokensRaw = BigInt(Math.floor(tokens * (10 ** tokenDecimals)));
+                            //$('#tokenAmount').text(tokens);
+                            $('#priceamount_tx').html(tokensRaw.toLocaleString()+"(TST)");
+                            
+                    }
+             }
+            break
+          case "(TRX)":
+             const trxAmount = parseFloat($(this).val());
+             const Minimum_trx =parseFloat(98.73);
+             if(isNaN(trxAmount)){
+               console.log("enter a valid solana input")
+             }
+             if(trxAmount<Minimum_trx){
+                $('#minimum_amount').html('Minimum amount of (TRX) 98.73');
+                $('#buyTokensBtn').prop('disabled',true);
+             }else{
+                        const trxPriceUsd = await fetchTronPrice() ;
+                        if(!trxPriceUsd){
+                            alert("Could not fetch TRX price");
+                        }
+                        else{
+                              $('#buyTokensBtn').prop('disabled',false);
+                            const trxtokens = trxAmount *tokenRate;
+                        // For raw token amount used in contract (with 9 decimals)
+                            const trxtokensRaw = BigInt(Math.floor(trxtokens * (10 ** tokenDecimals)));
+                            $('#tokenAmount').text(trxtokensRaw);
+                            $('#priceamount_tx').text(trxtokensRaw.toLocaleString()+"  (TST)")
+                        }
+             }
+             
+             break;
+          default:
+            alert("Please select currency")
+       }
+    })
+
+    $('#buyTokensBtn').on('click',function(e){
+
+      e.preventDefault();
+      let getwalletAddress = $('#walletAddress_txt').text();
+      let tokenRecieved = $('#priceamount_tx').text();
+      let coinExchange =localStorage.getItem('Currency')
+      // ✅ Send wallet address to server via jQuery
+          $.ajax({
+            url: '/api/getUserInfo',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ getwalletAddress,tokenRecieved,coinExchange }),
+            success: function(response) {
+              console.log('Server response:', response);
+            },
+            error: function(err) {
+              console.error('Failed to send wallet to server:', err);
+            }
+          });
+     
+
+
+    });
+})

@@ -1,6 +1,7 @@
 import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
+import $ from 'jquery';
 
 // Injected wallets (MetaMask, etc.)
 const injected = injectedModule();
@@ -32,16 +33,20 @@ const onboard = Onboard({
 const connectBtn = document.getElementById('connectBtn');
 const walletAddress = document.getElementById('walletAddress');
 
+
 connectBtn.addEventListener('click', async () => {
   const wallets = await onboard.connectWallet();
   if (wallets.length > 0) {
-    walletAddress.innerText = `Connected: ${wallets[0].accounts[0].address}`;
+    let  walletAddress = wallets[0].accounts[0].address ;
+     document.getElementById('walletAddress_txt').innerHTML= walletAddress;
+     document.getElementById('walletAddress').innerHTML=walletAddress;
+      document.getElementById('walletInfo').classList.remove('hidden');
     // ✅ Send wallet address to server via jQuery
     $.ajax({
       url: '/api/savewallet',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({ address }),
+      data: JSON.stringify({ walletAddress }),
       success: function(response) {
         console.log('Server response:', response);
       },
