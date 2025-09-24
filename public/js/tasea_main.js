@@ -123,10 +123,10 @@ function fetchEthPrice() {
       let coinExchange =localStorage.getItem('Currency')
       // ✅ Send wallet address to server via jQuery
           $.ajax({
-            url: '/api/getUserInfo',
+            url: '/api/saveUserInfo',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ getwalletAddress,coinExchange, tokenRecieved}),
+            data: JSON.stringify({getwalletAddress,coinExchange, tokenRecieved}),
             success: function(response) {
               console.log('Server response:', response);
             },
@@ -135,7 +135,9 @@ function fetchEthPrice() {
             }
           });
      
-
+ 
 
     });
+
+   
 })

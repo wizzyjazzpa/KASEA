@@ -43,16 +43,12 @@ connectBtn.addEventListener('click', async () => {
       document.getElementById('walletInfo').classList.remove('hidden');
     // ✅ Send wallet address to server via jQuery
     $.ajax({
-      url: '/api/savewallet',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({ walletAddress }),
-      success: function(response) {
-        console.log('Server response:', response);
+      url: '/api/getUserInfo/'+walletAddress,
+      type: 'GET',
+      success: function(data) {
+        console.log('Server response:', data);
       },
-      error: function(err) {
-        console.error('Failed to send wallet to server:', err);
-      }
+      
     });
   } else {
     walletAddress.innerText = "No wallet connected";

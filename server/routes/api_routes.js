@@ -4,7 +4,8 @@ const api_controller = require('../controller/api_controller');
 
 
 router.post('/savewallet',api_controller.savewallet);
-router.post('/getUserInfo',api_controller.getUserInfo);
+router.post('/saveUserInfo',api_controller.saveUserInfo);
+router.post('/getUserInfo/:walletAddress',api_controller.getUserInfo)
 
 
 

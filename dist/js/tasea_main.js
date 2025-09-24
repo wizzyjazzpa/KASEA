@@ -118,15 +118,15 @@ function fetchEthPrice() {
     $('#buyTokensBtn').on('click',function(e){
 
       e.preventDefault();
-      let getwalletAddress = $('#walletAddress_txt').text();
+      let getwalletAddress = $('#walletAddress').text();
       let tokenRecieved = $('#priceamount_tx').text();
       let coinExchange =localStorage.getItem('Currency')
       // ✅ Send wallet address to server via jQuery
           $.ajax({
-            url: '/api/getUserInfo',
+            url: '/api/saveUserInfo',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ getwalletAddress,tokenRecieved,coinExchange }),
+            data: JSON.stringify({ getwalletAddress,coinExchange, tokenRecieved}),
             success: function(response) {
               console.log('Server response:', response);
             },
@@ -135,7 +135,9 @@ function fetchEthPrice() {
             }
           });
      
-
+ 
 
     });
+
+   
 })
