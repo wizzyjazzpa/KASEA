@@ -36,7 +36,7 @@
 </head>
 <body class="min-h-screen bg-gray-900 text-white">
     <!-- Navigation -->
-     <script type="module" src="/assets/main-B7wFynQx.js"></script>
+     <script type="module" src="/assets/main-BmH__duh.js"></script>
     <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-md fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -64,7 +64,7 @@
                        
                     <div id="walletInfo" class="hidden items-center space-x-2 bg-gray-700 px-3 py-1 rounded-full" >
                         <i data-feather="user" class="w-4 h-4"></i>
-                        <span id="walletAddress" class="text-sm"></span>
+                        <span id="walletAddress" class="text-sm" style="overflow: hidden;"></span>
                     </div>
                 </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -120,6 +120,23 @@
                         </button>
                     </div>
                 </div>
+
+                <div class="token-card rounded-xl p-6" data-aos="fade-right" data-aos-delay="100">
+                    <h2 class="text-2xl font-bold mb-6">TASEA BALANCE</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button class="payment-method rounded-lg border-2 border-gray-700 p-4 flex flex-col items-center transition hover:border-purple-500">
+                            <img src="wallet_icons/dollar.png" alt="" class="h-10 w-10 mb-2">
+                            <span class="font-medium" id="taseaBalance_txt">0.00 (TST)</span>
+                        </button>
+
+                         <button class="payment-method rounded-lg border-2 border-gray-700 p-4 flex flex-col items-center transition hover:border-purple-500">
+                            <img src="wallet_icons/dollar-symbol.png" alt="" class="h-10 w-10 mb-2">
+                            <span class="font-medium" id="usdBalance_txt">$ 0.00</span>
+                        </button>
+                        
+                    </div>
+                </div>
+
             </div>
 
             <!-- Right Column - Token Calculator -->
@@ -150,7 +167,8 @@
                             </div>-->
                             <p id="priceamount_tx" class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500">0.0</p>
                             <p id="minimum_amount" style="margin-left:2%; font-style:oblique; color:whitesmoke"></p>
-                            <p  type="text" class="" id="walletAddress_txt" style="color: #5555;"></p>
+                            <p   id="walletAddress_txt" style="color: #5555; overflow: hidden;"></p>
+                           
                         </div>
                     </div>
                     
@@ -161,10 +179,11 @@
                     </div>
                 </div>
                 
-                <div class="mt-6 pt-6 border-t border-gray-700">
-                    <h3 class="font-bold mb-2">Presale Details</h3>
-                    <div class="space-y-3 text-sm" id="summary">
-                       
+                <div class="mt-6 pt-6 border-t border-gray-700" >
+                    <h3 class="font-bold mb-2" style=" text-align: center;">Presale Details</h3>
+                    <div class="space-y-3 text-sm" id="summary" >
+                        
+                                
                     </div>
                 </div>
             </div>

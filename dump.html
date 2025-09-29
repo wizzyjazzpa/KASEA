@@ -18,3 +18,26 @@
                             <span class="text-gray-400">Total Raised:</span>
                             <span>150 ETH / 500 ETH</span>
                         </div>
+
+
+
+
+                        <script>
+                             const walletAddress= req.body.getwalletAddress;
+                            const coinAmount = req.body.coinAmount;
+                            const coinExchange = req.body.coinExchange;
+                            const tokenRecieved=req.body.tokenRecieved;
+                            const usdValue = req.body.UsdValue;
+                            await  users_model.create({
+                                    walletaddress:walletAddress,
+                                    usdAmount:usdValue,
+                                    coinAmount:coinAmount,
+                                    coinExchange:coinExchange,
+                                    token_recieved:tokenRecieved
+                            }).then(result =>{
+                                    console.log(result);
+                                res.json({message:result})
+                            }).catch(err=>{
+                                    res.json({error:err.message})
+                            })
+                        </script>

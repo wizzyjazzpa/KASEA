@@ -1,6 +1,11 @@
+
+
 $(document).ready(function(){
+     
      const tokenRate=0.00234;
-     const tokenDecimals = 9;
+     const tokenDecimals = 9.0;
+      let UsdValue=0;
+
       localStorage.removeItem('Currency');
      // Function to fetch Solana price
   function fetchSolPrice() {
@@ -32,11 +37,12 @@ function fetchEthPrice() {
 }
     $('#cryptoAmount').on('keypress',  async function(){
        let currency = localStorage.getItem("Currency");
-
+       
        switch(currency){
           case "(ETH)":
-                    const ethAmount = parseFloat($(this).val());
-                     const MinimumEth = parseFloat(0.0142857);
+                    let ethAmount = parseFloat($(this).val());
+                     let MinimumEth = parseFloat(0.01428570);
+                      
                     if (isNaN(ethAmount)) {
                        console.log("enter a valid eth input")
                         $('#buyTokensBtn').prop('disabled',true);
@@ -47,16 +53,20 @@ function fetchEthPrice() {
                       $('#buyTokensBtn').prop('disabled',true);
                     }else{
                                $('#buyTokensBtn').prop('disabled',false);
-                             const ethPriceUsd = await fetchEthPrice();
+                             let ethPriceUsd = await fetchEthPrice();
+                               UsdValue =(ethAmount *ethPriceUsd).toFixed(2);
                              if(!ethPriceUsd){
                                 alert("Could not fetch SOL price");
                              }else{
+                                  
+                                  
                                     // Calculate number of tokens (without decimals)
                                     const tokens = ethAmount * tokenRate;
 
                                     // For raw token amount used in contract (with 9 decimals)
                                     const tokensRaw = BigInt(Math.floor(tokens * (10 ** tokenDecimals)));
-                                    $('#priceamount_tx').html(tokensRaw.toLocaleString()+"(TST)");
+                                    $('#priceamount_tx').html(tokensRaw.toLocaleString());
+                                   
                              }
                     }
                   break;
@@ -72,6 +82,7 @@ function fetchEthPrice() {
              }
              else{
                     const solPriceUsd = await fetchSolPrice();
+                    UsdValue =(solAmount * solPriceUsd).toFixed(2)
                     if(!solPriceUsd){
                         alert("Could not fetch SOL price");
                     }else{
@@ -80,7 +91,7 @@ function fetchEthPrice() {
                             // For raw token amount used in contract (with 9 decimals)
                             const tokensRaw = BigInt(Math.floor(tokens * (10 ** tokenDecimals)));
                             //$('#tokenAmount').text(tokens);
-                            $('#priceamount_tx').html(tokensRaw.toLocaleString()+"(TST)");
+                            $('#priceamount_tx').html(tokensRaw.toLocaleString());
                             
                     }
              }
@@ -96,6 +107,7 @@ function fetchEthPrice() {
                 $('#buyTokensBtn').prop('disabled',true);
              }else{
                         const trxPriceUsd = await fetchTronPrice() ;
+                         UsdValue =(trxAmount * trxPriceUsd).toFixed(2);
                         if(!trxPriceUsd){
                             alert("Could not fetch TRX price");
                         }
@@ -105,7 +117,7 @@ function fetchEthPrice() {
                         // For raw token amount used in contract (with 9 decimals)
                             const trxtokensRaw = BigInt(Math.floor(trxtokens * (10 ** tokenDecimals)));
                             $('#tokenAmount').text(trxtokensRaw);
-                            $('#priceamount_tx').text(trxtokensRaw.toLocaleString()+"  (TST)")
+                            $('#priceamount_tx').text(trxtokensRaw.toLocaleString())
                         }
              }
              
@@ -121,12 +133,13 @@ function fetchEthPrice() {
       let getwalletAddress = $('#walletAddress').text();
       let tokenRecieved = $('#priceamount_tx').text();
       let coinExchange =localStorage.getItem('Currency')
+      let coinAmount = $('#cryptoAmount').val();
       // ✅ Send wallet address to server via jQuery
           $.ajax({
             url: '/api/saveUserInfo',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({getwalletAddress,coinExchange, tokenRecieved}),
+            data: JSON.stringify({getwalletAddress,UsdValue,coinAmount,coinExchange, tokenRecieved}),
             success: function(response) {
               console.log('Server response:', response);
             },

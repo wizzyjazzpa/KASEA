@@ -41,12 +41,36 @@ connectBtn.addEventListener('click', async () => {
      document.getElementById('walletAddress_txt').innerHTML= walletAddress;
      document.getElementById('walletAddress').innerHTML=walletAddress;
       document.getElementById('walletInfo').classList.remove('hidden');
-    // ✅ Send wallet address to server via jQuery
     $.ajax({
-      url: '/api/getUserInfo/'+walletAddress,
+      url: `/api/getUserInfo/${walletAddress}`,
       type: 'GET',
       success: function(data) {
         console.log('Server response:', data);
+        $('#taseaBalance_txt').html(data.balance_data.token+" (TST)");
+        $('#usdBalance_txt').html("$ "+data.balance_data.usd);
+        let html = '';
+        data.result.forEach(function(item){
+              html+=`
+                   <div class="flex justify-between py-1">
+                            <span>Coin Recieved</span>
+                            <span>${item.token_recieved+"(TST)"}</span>
+                            </div>
+
+                            <div class="flex justify-between py-1" style="border-bottom:0.5px">
+                            <span>Status</span>
+                            <span class="text-yellow-400">${item.status}</span>
+                            </div>
+
+                             <div class="flex justify-between py-1" style="border-bottom:0.5px">
+                            <span>Date</span>
+                            <span class="text-yellow-400">${item.date}</span>
+                            </div>
+                            <hr>
+                           
+            
+            `
+        });
+        $('#summary').html(html)
       },
       
     });

@@ -1,3 +1,4 @@
+const { type } = require('jquery');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -6,10 +7,19 @@ const UserSchema = new Schema({
          type: String,
          require:true
      },
+     usdAmount:{
+          type:String,
+          require:true
+     },
+     coinAmount:{
+         type: String,
+         require:true
+     },
      coinExchange:{
          type:String,
          required:true
      },
+
      token_recieved:{
         type:String,
         require:true
@@ -17,6 +27,10 @@ const UserSchema = new Schema({
      status:{
            type: String,
            default:"pending"
+     },
+     totalTaseaAmount:{
+         type: Number,
+         default:0
      },
      date:{
         type: String, // Store as a formatted string
