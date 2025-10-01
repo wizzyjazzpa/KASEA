@@ -192,6 +192,6 @@ function fetchEthPrice() {
    }
    
 
-   setInterval(loadPhase, 60 * 60 * 500);
+   setInterval(loadPhase, 60 * 60 * 1000);
    loadPhase();
 })
