@@ -1,7 +1,8 @@
 
 
 $(document).ready(function(){
-     
+     localStorage.removeItem('progress')
+     localStorage.removeItem('currentPhase')
      const tokenRate=0.00234;
      const tokenDecimals = 9.0;
       let UsdValue=0;
@@ -134,7 +135,7 @@ function fetchEthPrice() {
       let tokenRecieved = $('#priceamount_tx').text();
       let coinExchange =localStorage.getItem('Currency')
       let coinAmount = $('#cryptoAmount').val();
-      // ✅ Send wallet address to server via jQuery
+      //  Send wallet address to server via jQuery
           $.ajax({
             url: '/api/saveUserInfo',
             type: 'POST',
@@ -151,6 +152,24 @@ function fetchEthPrice() {
  
 
     });
+   function loadPhase(){
 
+      $.ajax({
+          url:'/api/phase',
+          method:"GET",
+          success:function(response){
+             console.log("Phase Data: ", response)
+              $("#phase").html(response[0].phase);
+             $("#price").html(response[0].price);
+             $("#progressBar").css("width",response[0].progress+ "%").html(response[0].progress+ "%")
+             //alert(response.phase)
+
+          }
+      })
+      
+   }
    
+
+   setInterval(loadPhase,5000);
+   loadPhase();
 })

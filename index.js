@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require('path');
 const connectDB = require('./server/config/db');
+const initPhase = require('./server/middleware/initializePhase');
+
 
 
 const app = express();
@@ -12,7 +14,7 @@ const port = process.env.PORT;
 //database connection
 
 connectDB();
-
+initPhase();
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());

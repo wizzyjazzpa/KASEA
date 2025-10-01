@@ -74,31 +74,31 @@
                 <!-- Presale Phases -->
                 <div class="token-card rounded-xl p-6" data-aos="fade-right">
                     <h2 class="text-2xl font-bold mb-6">Presale Phases</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         <div class="phase-card phase-active rounded-lg border-2 border-gray-700 p-4 text-center">
-                            <h3 class="font-bold text-lg">Phase 1</h3>
-                            <p class="text-sm text-gray-300">1 ETH = 0.00006789 TS</p>
+                            <h3 class="font-bold text-lg"> Current Phase <span id="phase"></span></h3>
+                            <p class="text-sm text-gray-300">Token Price <span id="price"></span></p>
                             <div class="mt-2 h-2 bg-gray-700 rounded-full">
-                                <div class="h-2 bg-green-500 rounded-full" id="bar-1" style="width: 90%"></div>
+                                <div class="h-2 bg-green-500 rounded-full" id="progressBar" style="width:10%"></div>
                             </div>
                             <p class="text-xs mt-1" id="status-1">30% sold</p>
                         </div>
-                        <div class="phase-card rounded-lg border-2 border-gray-700 p-4 text-center">
+                        <!--<div class="phase-card rounded-lg border-2 border-gray-700 p-4 text-center">
                             <h3 class="font-bold text-lg">Phase 2</h3>
                             <p class="text-sm text-gray-300">1 ETH = 8,000 TKN</p>
                             <div class="mt-2 h-2 bg-gray-700 rounded-full">
                                 <div class="h-2 bg-gray-600 rounded-full" id="bar-2" style="width: 0%"></div>
                             </div>
                             <p class="text-xs mt-1" id="status-2">Coming soon</p>
-                        </div>
-                        <div class="phase-card rounded-lg border-2 border-gray-700 p-4 text-center">
+                        </div>-->
+                       <!----<div class="phase-card rounded-lg border-2 border-gray-700 p-4 text-center">
                             <h3 class="font-bold text-lg">Phase 3</h3>
                             <p class="text-sm text-gray-300">1 ETH = 5,000 TKN</p>
                             <div class="mt-2 h-2 bg-gray-700 rounded-full">
                                 <div class="h-2 bg-gray-600 rounded-full" id="bar-3" style="width: 0%"></div>
                             </div>
                             <p class="text-xs mt-1"  id="status-3">Coming soon</p>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 
@@ -307,7 +307,7 @@
     </script>
 
   <script>
-   $(document).ready(function () {
+  /* $(document).ready(function () {
   let currentPhase = parseInt(localStorage.getItem("currentPhase")) || 1;
   let progress = parseInt(localStorage.getItem("progress")) || 0;
   const intervalTime = 60000 / 10; // every 6s for demo. Change to 60000 for 1min
@@ -370,9 +370,9 @@
   renderUI();
 
   // Run every 6s for demo
-  let timer = setInterval(updateProgress, intervalTime);
+ // let timer = setInterval(updateProgress, intervalTime);
 });
-
+*/
   </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 const { error } = require('jquery');
 const users_model = require('../model/users');
 const balance_model = require('../model/balance');
+const phase_model = require('../model/phase');
 
 
 exports.savewallet = async(req,res)=>{
@@ -78,4 +79,28 @@ exports.getUserInfo = async(req,res)=>{
         }catch(err){
              console.error(err.message)
         }
+}
+
+exports.phase = async(req,res)=>{
+     /* await phase_model.find()
+      .then(getdata=>{
+            console.log("records"+getdata);
+            res.json({getdata});
+      });*/
+
+        try{
+            let getdata = await phase_model.find();
+       if (getdata){
+             console.log("records"+getdata);
+            res.json(getdata);
+       }else{
+             console.log("no record found");
+       }
+        }catch(error){
+            console.error(error.message);
+        }
+}
+exports.approvePayment = async(req,res)=>{
+        console.log(req.params);
+        res.json(req.params)
 }

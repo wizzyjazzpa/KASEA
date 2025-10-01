@@ -23,21 +23,13 @@
 
 
                         <script>
-                             const walletAddress= req.body.getwalletAddress;
-                            const coinAmount = req.body.coinAmount;
-                            const coinExchange = req.body.coinExchange;
-                            const tokenRecieved=req.body.tokenRecieved;
-                            const usdValue = req.body.UsdValue;
-                            await  users_model.create({
-                                    walletaddress:walletAddress,
-                                    usdAmount:usdValue,
-                                    coinAmount:coinAmount,
-                                    coinExchange:coinExchange,
-                                    token_recieved:tokenRecieved
-                            }).then(result =>{
-                                    console.log(result);
-                                res.json({message:result})
-                            }).catch(err=>{
-                                    res.json({error:err.message})
-                            })
+                            await users_model.find({walletaddress:wallet})
+       .then(result=>{
+            res.json(result)
+             const getbalance =  balance_model.findOne({walletaddress:wallet});
+             console.log(getbalance);
+
+       }).catch(err=>{
+            console.error(err.message);
+       })
                         </script>
