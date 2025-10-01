@@ -30,10 +30,15 @@ const phases = [
         }
 
         const now = new Date();
-        const daysPassed = Math.floor((now-current.lastUpdated)/ (1000 * 60 * 60* 24));
-        if(daysPassed >0){
-             let newProgress = current.progress + (daysPassed * (100 / phases[current.phase - 1].duration));
+        const secondsPassed = Math.floor((now-current.lastUpdated)/1000); //inseconds
+        if(secondsPassed >5){
+             // progress interval
+            const stepPercent = 100 / (phases[current.phase - 1].duration * (24 * 60 * 60 / 5));
+            
+             let newProgress = current.progress + stepPercent * Math.floor(secondsPassed / 5);
 
+            // let newProgress = current.progress + (daysPassed * (100 / phases[current.phase - 1].duration));
+              
              if(newProgress >=100){
                 const nextPhase = phases.find(p=> p.phase === current.phase +1);
                 if(nextPhase){
@@ -44,12 +49,14 @@ const phases = [
                         lastUpdated: now
                      });
                      await current.save();
+                      console.log(`Phase ${nextPhase.phase} started ✅`);
                     return current;
                 }else{
                         // Last phase stays at 100%
                         current.progress = 100;
                         current.lastUpdated = now;
                         await current.save();
+                         console.log("Presale completed 🎉");
                         return current;
                 }
              }else{
@@ -62,6 +69,12 @@ const phases = [
          return current;
 }
 
-
+setInterval(async () => {
+  try {
+    await updateProgress();
+  } catch (err) {
+    console.error("Error updating progress:", err.message);
+  }
+},  60 * 60 * 1000);
 
 module.exports = updateProgress;

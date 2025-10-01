@@ -1,5 +1,6 @@
 
 
+
 $(document).ready(function(){
      localStorage.removeItem('progress')
      localStorage.removeItem('currentPhase')
@@ -157,19 +158,40 @@ function fetchEthPrice() {
       $.ajax({
           url:'/api/phase',
           method:"GET",
+
           success:function(response){
-             console.log("Phase Data: ", response)
-              $("#phase").html(response[0].phase);
-             $("#price").html(response[0].price);
-             $("#progressBar").css("width",response[0].progress+ "%").html(response[0].progress+ "%")
+              console.log("Phase Data: ", response)
+            let phase = response[0].phase;
+            let price = response[0].price;
+            let baseProgress = response[0].progress;
+           let lastUpdated = response[0].lastUpdated ? new Date(response[0].lastUpdated) : new Date();
+            let  now = new Date();
+
+             // Calculate smooth progress since last update
+              let elapsedMs = now - lastUpdated;
+              let totalPhaseDurationMs = 60 * 60 * 1000; // 1 hour
+              let extraProgress = 0
+               if (elapsedMs > 0 && totalPhaseDurationMs > 0) {
+                  extraProgress = (elapsedMs / totalPhaseDurationMs) * (100 - baseProgress);
+                }
+              let currentProgress = baseProgress + extraProgress;
+              if(currentProgress >100){
+                  currentProgress = 100
+              }
+
+             console.log(extraProgress);
+              $("#phase").html(phase);
+             $("#price").html(price);
+             $("#progressBar").css("width",currentProgress+ "%");
+             $('#status-1').html(currentProgress.toFixed(2)+"%");
              //alert(response.phase)
 
           }
-      })
+      });
       
    }
    
 
-   setInterval(loadPhase,5000);
+   setInterval(loadPhase, 60 * 60 * 500);
    loadPhase();
 })
