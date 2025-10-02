@@ -1,7 +1,8 @@
-const { error } = require('jquery');
 const users_model = require('../model/users');
 const balance_model = require('../model/balance');
 const phase_model = require('../model/phase');
+const updateProgress = require('../middleware/initializePhase');
+const phases = require ('../config/phases');
 
 
 exports.savewallet = async(req,res)=>{
@@ -82,23 +83,26 @@ exports.getUserInfo = async(req,res)=>{
 }
 
 exports.phase = async(req,res)=>{
-     /* await phase_model.find()
-      .then(getdata=>{
-            console.log("records"+getdata);
-            res.json({getdata});
-      });*/
-
-        try{
-            let getdata = await phase_model.find();
-       if (getdata){
-             console.log("records"+getdata);
-            res.json(getdata);
-       }else{
-             console.log("no record found");
-       }
-        }catch(error){
-            console.error(error.message);
-        }
+      try{
+              const current = await updateProgress();
+                  const config = phases[current.phase - 1]//phase details
+                  console.log({
+                        phase:current.phase,
+                        price:current.price,
+                        progress:current.progress,
+                        lastUpdated:current.lastUpdated,
+                        duration: config.duration
+                     })
+                  res.json({
+                        phase:current.phase,
+                        price:current.price,
+                        progress:current.progress,
+                        lastUpdated:current.lastUpdated,
+                        duration:config.duration      
+                  })
+      }catch(err){
+             console.log("Error in phase API", err.message)
+      }
 }
 exports.approvePayment = async(req,res)=>{
         console.log(req.params);

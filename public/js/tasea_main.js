@@ -161,29 +161,34 @@ function fetchEthPrice() {
 
           success:function(response){
               console.log("Phase Data: ", response)
-            let phase = response[0].phase;
-            let price = response[0].price;
-            let baseProgress = response[0].progress;
-           let lastUpdated = response[0].lastUpdated ? new Date(response[0].lastUpdated) : new Date();
+              console.log("Displaying current phase",response.phase);
+            let phase = response.phase;
+            let price = response.price;
+           // let baseProgress = response.progress;
+           let lastUpdated =  new Date(response.lastUpdated);
+            let durationDays = response.duration;
+
             let  now = new Date();
 
-             // Calculate smooth progress since last update
-              let elapsedMs = now - lastUpdated;
-              let totalPhaseDurationMs = 60 * 60 * 1000; // 1 hour
-              let extraProgress = 0
-               if (elapsedMs > 0 && totalPhaseDurationMs > 0) {
-                  extraProgress = (elapsedMs / totalPhaseDurationMs) * (100 - baseProgress);
-                }
-              let currentProgress = baseProgress + extraProgress;
-              if(currentProgress >100){
-                  currentProgress = 100
-              }
+               
+            let totalPhaseMs = durationDays * 24 * 60 * 60 * 1000;
+            let elapsedMs = now - lastUpdated;
 
-             console.log(extraProgress);
+            // expected progress right now
+            let progress = (elapsedMs / totalPhaseMs) * 100;
+            if (progress > 100) progress = 100;
+                    // time left in this phase
+            let msLeft = totalPhaseMs - elapsedMs;
+            if (msLeft < 0) msLeft = 0;
+            let days = Math.floor(msLeft / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((msLeft / (1000 * 60 * 60)) % 24);
+            let mins = Math.floor((msLeft / (1000 * 60)) % 60);
+            
               $("#phase").html(phase);
              $("#price").html(price);
-             $("#progressBar").css("width",currentProgress+ "%");
-             $('#status-1').html(currentProgress.toFixed(2)+"%");
+
+             $("#progressBar").css("width", progress + "%").html(progress.toFixed(2)+"%");;
+             $('#status-1').html(`${days}d ${hours}h ${mins}m left`);
              //alert(response.phase)
 
           }
