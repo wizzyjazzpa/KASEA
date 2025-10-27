@@ -1,0 +1,64 @@
+
+
+<%- include('static/header') %>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+
+					<h1 class="h3 mb-3">Dashboard</h1>
+
+
+					<div class="row">
+						<div class="col-12 col-lg-12 col-xxl-9 d-flex">
+							<div class="card flex-fill">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Token Details</h5>
+								</div>
+								 <div class="table-responsive">
+										 <table class="table table-bordered table-striped">
+									<thead class="table-dark">
+									<tr>
+										<th>Network</th>
+										<th>Owner Wallet</th>
+										<th>Contract Address</th>
+										<th>Token Wallet</th>
+										<th>Balance (SOL)</th>
+										<th>Minted Tokens</th>
+									</tr>
+									</thead>
+									<tbody id="tokenTable">
+									<!-- jQuery will insert data here -->
+									</tbody>
+								</table>
+								 </div>
+		                      
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</main>
+     <script>
+		$(document).ready(function(){
+			
+			$.get("token_main.json", function(data){
+				console.log(data)
+				 let row = `
+          <tr>
+            <td>${data.network}</td>
+            <td>${data.ownerWallet}</td>
+            <td>${data.contractAddress}</td>
+            <td>${data.tokenWallet}</td>
+            <td>${data.balance}</td>
+            <td>${data.mintedTokens}</td>
+          </tr>
+        `;
+
+        $("#tokenTable").append(row);
+			}).fail(function(){
+				   alert("Failed to load token_main.json. Make sure the file exists and server is running.");
+			})
+		})
+	 </script>
+		<%- include('static/footer') %>

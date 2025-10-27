@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WalletConnect Standalone</title>
+  <!-- Web3Modal Standalone UMD -->
+  <script src="https://unpkg.com/@web3modal/standalone@2.7.0/dist/index.umd.js"></script>
+  <script src="https://unpkg.com/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <h1>Connect Wallet (Mobile + Desktop)</h1>
+  <button id="connect">Connect Wallet</button>
+  <p id="status">Not connected</p>
+
+  <script>
+    const projectId = "c8d7dcaec6bd94bddb76b57445502b27"; 
+    // 👉 create free projectId at https://cloud.walletconnect.com
+// ✅ Correct constructor (notice Web3Modal, not WalletConnectModal)
+    const modal = new window.Web3Modal({
+      projectId,
+      themeMode: "light"
+    });
+
+    let provider;
+
+    document.getElementById("connect").addEventListener("click", async () => {
+      try {
+        // Open QR modal (desktop) or deep link (mobile)
+        const session = await modal.openModal({
+          namespaces: {
+            eip155: {
+              methods: ["eth_sendTransaction", "personal_sign", "eth_signTypedData"],
+              chains: ["eip155:1"], // Ethereum mainnet
+              events: ["accountsChanged", "chainChanged"]
+            }
+          }
+        });
+
+        console.log("Session:", session);
+
+        // ⚡ Access WalletConnect provider
+        provider = new ethers.BrowserProvider(modal.getWalletConnectProvider());
+
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+
+        document.getElementById("status").innerText = "Connected: " + address;
+      } catch (err) {
+        console.error("Connection failed:", err);
+        document.getElementById("status").innerText = "Connection failed";
+      }
+    });
+  </script>
+</body>
+</html>

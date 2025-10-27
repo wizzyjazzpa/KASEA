@@ -1,0 +1,360 @@
+ <div class="flex justify-between">
+                            <span class="text-gray-400">Token Price:</span>
+                            <span id="tokenPrice">10,000 TKN per 1 ETH</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Phase:</span>
+                            <span>Phase 1 (30% sold)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Min Purchase:</span>
+                            <span>0.01 ETH</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Max Purchase:</span>
+                            <span>5 ETH</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Total Raised:</span>
+                            <span>150 ETH / 500 ETH</span>
+                        </div>
+
+
+
+
+                        <script>
+                            await users_model.find({walletaddress:wallet})
+       .then(result=>{
+            res.json(result)
+             const getbalance =  balance_model.findOne({walletaddress:wallet});
+             console.log(getbalance);
+
+       }).catch(err=>{
+            console.error(err.message);
+       })
+                        </script>
+
+
+
+<script>
+    const cron = require("node-cron");
+
+// ===== Initialize Phase if not exists =====
+
+async function initPhase(){
+
+    let phase = await phase_model.findOne();
+    if(!phase){
+         await phase_model.create({phase:1,progress:0,price:0.09,lastUpdated:new Date()})
+         .then()
+         .catch(err=>{
+              console.log(err.message);
+         });
+    }
+}
+
+// ===== Daily Progress Update =====
+// runs every day at midnight
+
+cron.schedule("0 0 * * *",async()=>{
+     let phase = await phase.findOne();
+     if(!phase) return;
+
+     // increase progress daily by 10%
+     let newProgress = phase.progress + 10;
+     
+     if(newProgress >=100){
+        newProgress =100;
+
+        //move to next Phase
+        if(phase.phase< 3){
+             phase.phase +=1;
+             phase.progress =0;
+             phase.price +=0.01
+        }
+     }else{
+        phase.progress = newProgress;
+     }
+       lastUpdated = new Date();
+      await phase_model.updateMany({lastUpdated:new Date()})
+      .then(()=>{
+           console.log(`Updated phase to ${phase.phase}, progress ${phase.progress}%`)
+      })
+      .catch(err=>{
+          console.error("could not update:"+ err.message);
+      })
+})
+
+</script>
+
+
+<script>
+    const phase_model = require('../model/phase');
+
+// --- CONFIG ---
+const phases = [
+  { phase: 1, price: 0.01, duration: 10 }, // 10 days
+  { phase: 2, price: 0.02, duration: 10 },
+  { phase: 3, price: 0.05, duration: 10 },
+  { phase: 4, price: 0.07, duration: 10 }, // 10 days
+  { phase: 5, price: 0.09, duration: 10 },
+  { phase: 6, price: 0.1, duration: 10 },
+  { phase: 7, price: 0.3, duration: 10 }, // 10 days
+  { phase: 8, price: 0.5, duration: 10 },
+  { phase: 9, price: 0.7, duration: 10 }
+];
+
+ async function updateProgress(){
+   
+    let current  = await phase_model.findOne().sort({phase:-1}).exec();
+    if(!current){
+         // start fresh
+        current = new phase_model({
+        phase: phases[0].phase,
+        price: phases[0].price,
+        progress: 0,
+        lastUpdated: new Date()
+        });
+        await current.save();
+        return current;
+
+        }
+
+        const now = new Date();
+        const daysPassed = Math.floor((now-current.lastUpdated)/ (1000 * 60 * 60* 24));
+        if(daysPassed >0){
+             let newProgress = current.progress + (daysPassed * (100 / phases[current.phase - 1].duration));
+
+             if(newProgress >=100){
+                const nextPhase = phases.find(p=> p.phase === current.phase +1);
+                if(nextPhase){
+                     current = new phase_model({
+                        phase: nextPhase.phase,
+                        price: nextPhase.price,
+                        progress: 0,
+                        lastUpdated: now
+                     });
+                     await current.save();
+                    return current;
+                }else{
+                        // Last phase stays at 100%
+                        current.progress = 100;
+                        current.lastUpdated = now;
+                        await current.save();
+                        return current;
+                }
+             }else{
+                   current.progress = newProgress;
+                    current.lastUpdated = now;
+                    await current.save();
+             }
+        }
+
+         return current;
+}
+
+
+
+module.exports = updateProgress;
+
+
+
+
+ $.ajax({
+          url:'/api/phase',
+          method:"GET",
+          success:function(response){
+             console.log("Phase Data: ", response)
+              $("#phase").html(response[0].phase);
+             $("#price").html(response[0].price);
+             $("#progressBar").css("width",response[0].progress+ "%").html(response[0].progress+ "%")
+             //alert(response.phase)
+
+          }
+      })
+</script>
+
+
+
+
+<script>
+
+    const phase_model = require('../model/phase');
+
+// --- CONFIG ---
+const phases = [
+  { phase: 1, price: 0.01, duration: 14 }, // 10 days
+  { phase: 2, price: 0.02, duration: 14 },
+  { phase: 3, price: 0.05, duration: 14 },
+  { phase: 4, price: 0.07, duration: 14 }, // 10 days
+  { phase: 5, price: 0.09, duration: 14 },
+  { phase: 6, price: 0.1, duration: 14 },
+  { phase: 7, price: 0.3, duration: 14 }, // 10 days
+  { phase: 8, price: 0.5, duration: 14 },
+  { phase: 9, price: 0.7, duration: 14 }
+];
+
+ async function updateProgress(){
+   
+    let current  = await phase_model.findOne().sort({phase:-1}).exec();
+    if(!current){
+         // start fresh
+        current = new phase_model({
+        phase: phases[0].phase,
+        price: phases[0].price,
+        progress: 0,
+        lastUpdated: new Date()
+        });
+        await current.save();
+        return current;
+
+        }
+
+        const now = new Date();
+        const secondsPassed = Math.floor((now-current.lastUpdated)/1000); //inseconds
+        if(secondsPassed >5){
+             // progress interval
+            const stepPercent = 100 / (phases[current.phase - 1].duration * (24 * 60 * 60 / 5));
+            
+             let newProgress = current.progress + stepPercent * Math.floor(secondsPassed / 5);
+
+            // let newProgress = current.progress + (daysPassed * (100 / phases[current.phase - 1].duration));
+              
+             if(newProgress >=100){
+                const nextPhase = phases.find(p=> p.phase === current.phase +1);
+                if(nextPhase){
+                     current = new phase_model({
+                        phase: nextPhase.phase,
+                        price: nextPhase.price,
+                        progress: 0,
+                        lastUpdated: now
+                     });
+                     await current.save();
+                      console.log(`Phase ${nextPhase.phase} started ✅`);
+                    return current;
+                }else{
+                        // Last phase stays at 100%
+                        current.progress = 100;
+                        current.lastUpdated = now;
+                        await current.save();
+                         console.log("Presale completed 🎉");
+                        return current;
+                }
+             }else{
+                   current.progress = newProgress;
+                    current.lastUpdated = now;
+                    await current.save();
+             }
+        }
+
+         return current;
+}
+
+setInterval(async () => {
+  try {
+    await updateProgress();
+  } catch (err) {
+    console.error("Error updating progress:", err.message);
+  }
+},  60 * 60 * 1000);
+
+module.exports = updateProgress;
+</script>
+
+
+
+
+<script>
+  require("dotenv").config();
+const fs = require("fs");
+const { Connection, PublicKey, clusterApiUrl, Keypair } = require("@solana/web3.js");
+const { Metaplex, keypairIdentity } = require("@metaplex-foundation/js");
+
+// --- Load token info ---
+const TOKEN_FILE = "token_main.json";
+if (!fs.existsSync(TOKEN_FILE)) {
+  console.error("❌ token_main.json not found!");
+  process.exit(1);
+}
+const tokenData = JSON.parse(fs.readFileSync(TOKEN_FILE, "utf8"));
+const mintAddress = new PublicKey(tokenData.contractAddress);
+
+// --- Load wallet keypair ---
+const KEYPAIR_FILE = "wallet_token.json";
+if (!fs.existsSync(KEYPAIR_FILE)) {
+  console.error("❌ wallet_token.json not found!");
+  process.exit(1);
+}
+const secret = JSON.parse(fs.readFileSync(KEYPAIR_FILE, "utf8"));
+const payer = Keypair.fromSecretKey(Uint8Array.from(secret));
+
+// --- Connect to Solana ---
+const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
+console.log("✅ Connected to Solana mainnet-beta");
+
+// --- Initialize Metaplex ---
+const metaplex = Metaplex.make(connection).use(keypairIdentity(payer));
+
+// --- Metadata Information ---
+const metadata = {
+  name: "Kasea",
+  symbol: "TKN",
+  description:
+    "Kasea Coin is a decentralized Solana token for fast, fun, and community-driven transactions.",
+  image: "https://kaseacoin.up.railway.app/public/images/KASEA LOGO (W)_060326.svg", // change to your actual hosted image
+  attributes: [
+    { trait_type: "Blockchain", value: "Solana" },
+    { trait_type: "Project", value: "Kasea" },
+  ],
+  properties: {
+    files: [
+      {
+        uri:  "https://kaseacoin.up.railway.app/public/images/KASEA LOGO (W)_060326.svg",
+        type: "image/png",
+      },
+    ],
+    category: "image",
+  },
+};
+
+async function main() {
+  console.log("🚀 Uploading metadata to Arweave...");
+  const { uri } = await metaplex.nfts().uploadMetadata(metadata);
+  console.log("✅ Metadata uploaded!");
+  console.log("🌐 Metadata URI:", uri);
+
+  console.log("🪙 Attaching metadata to token:", mintAddress.toBase58());
+
+  const { nft } = await metaplex.nfts().create({
+    uri,
+    name: metadata.name,
+    symbol: metadata.symbol,
+    sellerFeeBasisPoints: 0,
+    mintAddress,
+    updateAuthority: payer,
+  });
+
+  console.log("✅ Metadata successfully attached!");
+  console.log("🔗 View on Explorer:");
+  console.log(
+    `https://explorer.solana.com/address/${mintAddress.toBase58()}?cluster=mainnet-beta`
+  );
+
+  fs.writeFileSync(
+    "metadata_update.json",
+    JSON.stringify(
+      {
+        mint: mintAddress.toBase58(),
+        metadataUri: uri,
+        explorer: `https://explorer.solana.com/address/${mintAddress.toBase58()}?cluster=mainnet-beta`,
+      },
+      null,
+      2
+    )
+  );
+  console.log("📄 Metadata info saved to metadata_update.json");
+}
+
+main().catch(console.error);
+
+</script>

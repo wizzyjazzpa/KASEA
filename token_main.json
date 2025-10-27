@@ -1,0 +1,11 @@
+{
+  "network": "mainnet-beta",
+  "rpcUsed": "https://api.mainnet-beta.solana.com/",
+  "contractAddress": "GdxJGUzeaeJHYodEsekdDRWEPPHSeAZFtRP1X3mpWQew",
+  "ownerWallet": "HwiMmuG8Qyjg7kNNatE9N9NoHy7WSPtVPmp317bf8Hqi",
+  "tokenWallet": "9hWojWhvd72rfriGoKfx53Aw1HY6mdN4cCzNqaFL7qH3",
+  "balance": 0.018528401,
+  "mintedTokens": 1000,
+  "decimals": 9,
+  "explorerLink": "https://explorer.solana.com/address/GdxJGUzeaeJHYodEsekdDRWEPPHSeAZFtRP1X3mpWQew?cluster=mainnet-beta"
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Walletconnect">
+	<meta name="author" content="Karpearl">
+	<meta name="keywords" content="Karpearl Dashboard">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<!--<link rel="shortcut icon" href="admin/img/cropped-karpel-1.png" />-->
+
+	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+	<title>
+		<%= locals.title %>
+	</title>
+
+	<link href="admin/css/app.css" rel="stylesheet">
+	 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables Bootstrap 5 CSS -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.4/datatables.min.css" rel="stylesheet">
+
+	
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<nav id="sidebar" class="sidebar js-sidebar">
+			<div class="sidebar-content js-simplebar">
+				<a class="sidebar-brand" href="/admin_home">
+					<span class="align-middle">KASEA ADMIN</span>
+				</a>
+
+				<ul class="sidebar-nav">
+					<li class="sidebar-header">
+						Pages
+					</li>
+
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="/admin_home">
+							<i class="align-middle" data-feather="sliders"></i> <span
+								class="align-middle">Dashboard</span>
+						</a>
+					</li>
+
+						<li class="sidebar-item">
+						<a class="sidebar-link" href="/tokenfiles">
+							<i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Token Details</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/changePassword">
+							<i class="align-middle" data-feather="key"></i> <span class="align-middle">Manage Password</span>
+						</a>
+					</li>
+
+					
+
+					<!--<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-sign-up.html">
+							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign
+								Up</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-blank.html">
+							<i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+						</a>
+					</li>
+
+					<li class="sidebar-header">
+						Tools & Components
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="ui-buttons.html">
+							<i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="ui-forms.html">
+							<i class="align-middle" data-feather="check-square"></i> <span
+								class="align-middle">Forms</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="ui-cards.html">
+							<i class="align-middle" data-feather="grid"></i> <span class="align-middle">Cards</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="ui-typography.html">
+							<i class="align-middle" data-feather="align-left"></i> <span
+								class="align-middle">Typography</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="icons-feather.html">
+							<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Icons</span>
+						</a>
+					</li>
+
+					<li class="sidebar-header">
+						Plugins & Addons
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="charts-chartjs.html">
+							<i class="align-middle" data-feather="bar-chart-2"></i> <span
+								class="align-middle">Charts</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="maps-google.html">
+							<i class="align-middle" data-feather="map"></i> <span class="align-middle">Maps</span>
+						</a>
+					</li>
+				</ul>-->
+
+
+			</div>
+		</nav>
+
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg">
+				<a class="sidebar-toggle js-sidebar-toggle">
+					<i class="hamburger align-self-center"></i>
+				</a>
+
+				<div class="navbar-collapse collapse">
+					 <a href="/admin-home"><</a>
+					<ul class="navbar-nav navbar-align">
+                        
+						<li class="nav-item dropdown">
+							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#"
+								data-bs-toggle="dropdown">
+								<i class="align-middle" data-feather="settings"></i>
+							</a>
+
+							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
+								data-bs-toggle="dropdown">
+								<img src="admin/img/users.png" class="avatar img-fluid rounded me-1"
+									alt="Charles Hall"  /> <span class="text-dark">
+									<%= getAdmin.username %>
+								</span>
+							</a>
+							<div class="dropdown-menu dropdown-menu-end">
+
+								<a class="dropdown-item" href="/logout">Log out</a>
+								<a class="dropdown-item" href="/changePassword">Change Password</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</nav>

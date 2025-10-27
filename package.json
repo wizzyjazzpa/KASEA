@@ -1,0 +1,52 @@
+{
+  "name": "catoshi_coin",
+  "version": "1.0.0",
+  "description": "meme coin",
+  "keywords": [
+    "catoshi",
+    "coin"
+  ],
+  "license": "ISC",
+  "author": "MIT",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  
+  "dependencies": {
+    "@bundlr-network/client": "^0.11.17",
+    "@metaplex-foundation/js": "^0.20.1",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@wagmi/core": "^2.20.3",
+    "@web3-onboard/core": "^2.24.1",
+    "@web3-onboard/injected-wallets": "^2.11.3",
+    "@web3-onboard/walletconnect": "^2.6.2",
+    "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/html": "^2.7.1",
+    "@web3modal/wagmi": "^5.1.11",
+    "arweave": "^1.15.7",
+    "body-parser": "^2.2.0",
+    "bs58": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "ethers": "^6.15.0",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "jquery": "^3.7.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.2",
+    "node-cron": "^4.2.1",
+    "nodemon": "^3.1.10",
+    "path": "^0.12.7",
+    "thirdweb": "^5.105.48",
+    "viem": "^2.37.6",
+    "vite": "^7.1.5",
+    "vue": "^3.5.21"
+  }
+}

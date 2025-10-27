@@ -1,0 +1,100 @@
+
+
+<%- include('static/header') %>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+
+					<h1 class="h3 mb-3">Dashboard</h1>
+
+
+					<div class="row">
+						<div class="col-12 col-lg-12 col-xxl-9 d-flex">
+							<div class="card flex-fill">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Phrase</h5>
+								</div>
+								 <div class="table-responsive">
+										<table id="myTable" class="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>wallet Address</th>
+													<th>Usd Amount</th>
+													<th>Coin Amount</th>
+													<th>Coin Exchange</th>
+													<th>Token Recieved</th>
+													<th>Date</th>
+													<th>Status</th>
+													<th>Action</th>
+
+												</tr>
+											</thead>
+											<tbody>
+                                                <% getUserInfo.forEach( function(userData) { %>
+
+													<tr>
+													<td id='trans_id' ><%= userData._id %></td>
+													<td><%= userData.walletaddress  %></td>
+													<td><%= userData.usdAmount %></td>
+													<td><%= userData.coinAmount %></td>
+													<td><%= userData.coinExchange %></td>
+													<td><%= userData.token_recieved %></td>
+													<td><%= userData.date %></td>
+													<td id="status"><% if (userData.status=="pending") { %>
+													         <span class="text-warning"><%= userData.status %></span>
+													<% }else{ %>
+															 <span class="text-success"><%= userData.status %></span>
+												     <% } %>
+												    </td>
+													<td>
+													  <% if (userData.status == "approved") { %>
+													        <button type="button" class="btn btn-success" disabled>approved</button>
+													  <% }else{ %>
+														<button type="button" data-id="<%= userData._id %>" data-wallet="<%= userData.walletaddress %>"   class=' approve_btn btn btn-primary' >approve</button>
+													  <% } %>
+													</td>
+												</tr>
+												 
+												<% } )%>
+											</tbody>
+                                     </table>
+								 </div>
+		                      
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</main>
+     <script>
+		$(document).ready(function(){
+			$(document).on('click', '.approve_btn',function(){
+			 const id = $(this).data('id');
+			 const walletAddress =$(this).data('wallet');
+				$.ajax({
+					 url:`/api/approvePayment`,
+					 type:'POST',
+					 contentType:'application/json',
+					 data:JSON.stringify({id,walletAddress}),
+					 success:function(repsonse){
+                        $('#status').text('approved');
+						$('#status').css("color","forestgreen");
+					 },
+					 error:function(err){
+						 alert("❌ Error approving transaction");
+						console.error(err);
+					 }
+
+				})
+			})
+
+			$.get("token_main.json", function(data){
+				console.log(data)
+			}).fail(function(){
+				   alert("Failed to load token_main.json. Make sure the file exists and server is running.");
+			})
+		})
+	 </script>
+		<%- include('static/footer') %>
